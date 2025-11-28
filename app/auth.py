@@ -9,23 +9,18 @@ from typing import Dict, Any
 
 load_dotenv()
 
-# Configuration from .env
 JWT_SECRET = os.getenv("JWT_SECRET", "super-secret-default-key")
 JWT_ALG = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXP_SECONDS = int(os.getenv("JWT_EXP_SECONDS", 3600))
 
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 security = HTTPBearer()
 
 def hash_password(password: str) -> str:
-    pw_bytes = password.encode("utf-8")[:72]   # truncate here
-    return pwd_context.hash(pw_bytes)
+    return pwd_context.hash(password)
 
 def verify_password(password: str, hashed: str) -> bool:
-    pw_bytes = password.encode("utf-8")[:72]   # truncate here
-    return pwd_context.verify(pw_bytes, hashed)
-
+    return pwd_context.verify(password, hashed)
 
 def create_access_token(data: Dict[str, Any]) -> str:
     payload = data.copy()

@@ -31,7 +31,7 @@ def update_org(r:OrgUpdateRequest,cur=Depends(get_current_admin)):
     db=get_master_db()
     orgs=db[ORG]; admins=db[ADM]
     old=r.organization_name.lower(); new=r.new_organization_name.lower()
-    if cur["org_name"]!=old: raise HTTPException(403,"No access")
+    if cur["org_name"]!=old: raise HTTPException(403,f"No access. Token org: '{cur['org_name']}', requested org: '{old}'")
     if orgs.find_one({"organization_name":new}): raise HTTPException(400,"New exists")
     copy_collection(old,new)
     orgs.update_one({"organization_name":old},{"$set":{"organization_name":new,"collection_name":f"org_{new}"}})
@@ -39,7 +39,7 @@ def update_org(r:OrgUpdateRequest,cur=Depends(get_current_admin)):
 
 @router.delete("/org/delete")
 def delete_org(name:str,cur=Depends(get_current_admin)):
-    if cur["org_name"]!=name.lower(): raise HTTPException(403,"No access")
+    if cur["org_name"]!=name.lower(): raise HTTPException(403,f"No access. Token org: '{cur['org_name']}', requested org: '{name.lower()}'")
     drop_org_collection(name.lower())
     db=get_master_db(); db[ORG].delete_one({"organization_name":name.lower()})
     db[ADM].delete_many({"organization_name":name.lower()})

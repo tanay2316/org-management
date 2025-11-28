@@ -3,7 +3,7 @@ from pydantic import BaseModel,EmailStr,Field
 class OrgCreateRequest(BaseModel):
     organization_name:str
     email:EmailStr
-    password:str
+    password:str = Field(max_length=72)
 
 class OrgUpdateRequest(BaseModel):
     organization_name:str
