@@ -5,7 +5,7 @@ import uvicorn
 
 app = FastAPI()
 
-# Allow CORS for development (adjust `allow_origins` in production)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
