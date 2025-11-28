@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Check which organization is associated with tanayj16@gmail.com
-"""
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
